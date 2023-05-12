@@ -3,14 +3,8 @@
 #include "vector.h"
 #include "config.h"
 
-// compute: Updates the positions and locations of the objects in the system based on gravity.
-// Parameters: None
-// Returns: None
-// Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
-//__global__ void compute_help()
-//{
-//}
-__global__ void initialize(vector3 *values,vector3 **accels) {
+
+__global__ void setThingsUp(vector3 *values,vector3 **accels) {
 	int index = threadIdx.x;
 	int stride = blockDim.x;
 
