@@ -22,7 +22,7 @@ __global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels
 	for (int i = index; i < NUMENTITIES; i += stride)
 	{
 		// first compute the pairwise accelerations.  Effect is on the first argument.
-		for (j = 0; j < NUMENTITIES; j++)
+		for (int j = 0; j < NUMENTITIES; j++)
 		{
 			if (i == j)
 			{
