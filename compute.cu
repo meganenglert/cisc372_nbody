@@ -16,7 +16,7 @@ __global__ void setThingsUp(vector3 *values,vector3 **accels) {
 
 __global__ void fill(vector3 *values, vector3 **accels)
 {
-	for (int i = index; i < NUMENTITIES; i += stride)
+	for (int i = idx; i < NUMENTITIES; i += stride)
 	{
 		// first compute the pairwise accelerations.  Effect is on the first argument.
 		for (int j = 0; j < NUMENTITIES; j++)
