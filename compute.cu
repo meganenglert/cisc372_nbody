@@ -11,8 +11,7 @@
 //__global__ void compute_help()
 //{
 //}
-__global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels);
-__global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels)
+__global__ void initialize(int NUMENTITIES, vector3 *values, vector3 **accels)
 {
 	int index = threadIdx.x;
 	int stride = blockDim.x;
@@ -21,6 +20,9 @@ __global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels
 	{
 		accels[i] = &values[i * NUMENTITIES];
 	}
+}
+
+__global__ void fill( int NUMENTITIES, vector3 *values, vector3 **accels) {
 	for (int i = index; i < NUMENTITIES; i += stride)
 	{
 		// first compute the pairwise accelerations.  Effect is on the first argument.
