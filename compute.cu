@@ -11,6 +11,7 @@
 //__global__ void compute_help()
 //{
 //}
+__global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels);
 __global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels)
 {
 	int index = threadIdx.x;
