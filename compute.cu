@@ -10,7 +10,7 @@
 //__global__ void compute_help()
 //{
 //}
-__global__ void initialize(int NUMENTITIES, (void*)values,(void **)accels) {
+__global__ void initialize(vector3 *values,vector3 **accels) {
 	int index = threadIdx.x;
 	int stride = blockDim.x;
 
