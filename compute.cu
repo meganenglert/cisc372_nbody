@@ -28,7 +28,7 @@ __global__ void fill(vector3 *values, vector3 **accels)
 			else
 			{
 				vector3 distance;
-				for (k = 0; k < 3; k++)
+				for (int k = 0; k < 3; k++)
 					distance[k] = hPos[i][k] - hPos[j][k];
 				double magnitude_sq = distance[0] * distance[0] + distance[1] * distance[1] + distance[2] * distance[2];
 				double magnitude = sqrt(magnitude_sq);
