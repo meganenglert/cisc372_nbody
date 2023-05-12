@@ -24,14 +24,11 @@ void initHostMemory(int numObjects)
 }
 
 void initDeviceMemory() {
-	vector3 *dVel, *dPos;
-	double* dMass;
-	cudaMalloc((vector3 *)&dVel, sizeof(hVel));
-	cudaMalloc((vector3 *)&dPos, sizeof(hPos));
-	cudaMalloc((double *)&dMass, sizeof(double *));
-	cudaMemcpy(hVel, dVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(hPos, dPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(mass, dMass, sizeof(double*), cudaMemcpyHostToDevice);
+	
+	cudaMalloc((void *)&d_hVel, sizeof(hVel));
+	cudaMalloc((void *)&d_hPos, sizeof(hPos));
+	cudaMemcpy(hVel, d_hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(hPos, d_hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 }
 
 //freeHostMemory: Free storage allocated by a previous call to initHostMemory
