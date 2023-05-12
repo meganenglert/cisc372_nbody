@@ -5,10 +5,10 @@
 
 
 __global__ void setThingsUp(vector3 *values,vector3 **accels) {
-	int index = threadIdx.x;
+	int idx = threadIdx.x;
 	int stride = blockDim.x;
 
-	for (int i = index; i < NUMENTITIES; i += stride)
+	for (int i = idx; i < NUMENTITIES; i += stride)
 	{
 		accels[i] = &values[i * NUMENTITIES];
 	}
