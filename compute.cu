@@ -11,7 +11,7 @@
 //__global__ void compute_help()
 //{
 //}
-__global__ void initialize(int NUMENTITIES, vector3 *values, vector3 **accels)
+void initialize(int NUMENTITIES, vector3 *values, vector3 **accels)
 {
 	int index = threadIdx.x;
 	int stride = blockDim.x;
