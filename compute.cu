@@ -15,14 +15,15 @@ __global__ void initialize(int NUMENTITIES, vector3 *values, vector3 **accels)
 {
 	int index = threadIdx.x;
 	int stride = blockDim.x;
-	
+
 	for (int i = index; i < NUMENTITIES; i += stride)
 	{
 		accels[i] = &values[i * NUMENTITIES];
 	}
 }
 
-__global__ void fill( int NUMENTITIES, vector3 *values, vector3 **accels) {
+__global__ void fill(int NUMENTITIES, vector3 *values, vector3 **accels)
+{
 	for (int i = index; i < NUMENTITIES; i += stride)
 	{
 		// first compute the pairwise accelerations.  Effect is on the first argument.
@@ -49,17 +50,16 @@ void compute()
 {
 	// make an acceleration matrix which is NUMENTITIES squared in size;
 	int i, j, k;
-	vector3* values=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
-	vector3** accels=(vector3**)malloc(sizeof(vector3*)*NUMENTITIES);
-	vector3* d_values;
-	cudaMalloc((vector3*)&d_values,sizeof(values));
-	vector3** d_accels;
-	cudaMalloc((vector3**)&d_accels,sizeof(accels));
+	vector3 *values = (vector3 *)malloc(sizeof(vector3) * NUMENTITIES * NUMENTITIES);
+	vector3 **accels = (vector3 **)malloc(sizeof(vector3 *) * NUMENTITIES);
+	vector3 *d_values;
+	cudaMalloc((vector3 **)&d_values, sizeof(values));
+	vector3 **d_accels;
+	cudaMalloc((vector3 ***)&d_accels, sizeof(accels));
 
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
-	construct_row<<<1,256>>>(NUMENTITIES, d_values, d_accels);
+	construct_row<<<1, 256>>>(NUMENTITIES, d_values, d_accels);
 	cudaDeviceSynchronize();
-
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
