@@ -45,12 +45,13 @@ void compute()
 {
 	// make an acceleration matrix which is NUMENTITIES squared in size;
 	int i, j, k;
-	vector3 *values;
-	vector3 **accels;
-	cudaMallocManaged(&values, NUMENTITIES * NUMENTITIES * sizeof(vector3 *));
-	cudaMallocManaged(&accels, NUMENTITIES * sizeof(vector3 **)) int blockSize = 256;
+	vector3* values=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
+	vector3** accels=(vector3**)malloc(sizeof(vector3*)*NUMENTITIES);
+	vector3* d_values=(vector3*)cudaMalloc(sizeof(values));
+	vector3** d_accels=(vector3**)cudaMalloc(sizeof(accels));
+
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
-	construct_row<<<1,256>>>(NUMENTITIES, values, accels);
+	construct_row<<<1,256>>>(NUMENTITIES, d_values, d_accels);
 	cudaDeviceSynchronize();
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
@@ -70,6 +71,8 @@ void compute()
 			hPos[i][k] = hVel[i][k] * INTERVAL;
 		}
 	}
-	cudaFree(accels);
-	cudaFree(values);
+	free(accels);
+	free(values);
+	cudaFree(d_accels);
+	cudaFree(d_values);
 }
