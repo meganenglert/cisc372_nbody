@@ -63,7 +63,7 @@ void compute()
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		vector3 accel_sum = {0, 0, 0};
+		(void*)accel_sum = {0, 0, 0};
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
