@@ -7,9 +7,9 @@
 // Parameters: None
 // Returns: None
 // Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
-__global__ void compute_help()
-{
-}
+//__global__ void compute_help()
+//{
+//}
 __global__ void construct_row(int NUMENTITIES, vector3 *values, vector3 **accels)
 {
 	int index = threadIdx.x;
