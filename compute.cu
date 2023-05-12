@@ -4,7 +4,7 @@
 #include "config.h"
 
 
-__global__ void setThingsUp(vector3 *values,vector3 **accels) {
+__global__ void setUpMatrix(vector3 *values,vector3 **accels) {
 	int idx = threadIdx.x;
 	int stride = blockDim.x;
 
@@ -31,7 +31,7 @@ __global__ void fill(vector3 *values, vector3 **accels)
 			{
 				vector3 distance;
 				for (int k = 0; k < 3; k++)
-					distance[k] = hPos[i][k] - hPos[j][k];
+					distance[k] = dPos[i][k] - dPos[j][k];
 				double magnitude_sq = distance[0] * distance[0] + distance[1] * distance[1] + distance[2] * distance[2];
 				double magnitude = sqrt(magnitude_sq);
 				double accelmag = -1 * GRAV_CONSTANT * mass[j] / magnitude_sq;
@@ -68,8 +68,8 @@ void compute()
 		// compute the new position based on the velocity and time interval
 		for (k = 0; k < 3; k++)
 		{
-			hVel[i][k] += accel_sum[k] * INTERVAL;
-			hPos[i][k] = hVel[i][k] * INTERVAL;
+			dVel[i][k] += accel_sum[k] * INTERVAL;
+			dPos[i][k] = hVel[i][k] * INTERVAL;
 		}
 	}
 	free(accels);

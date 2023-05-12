@@ -23,6 +23,17 @@ void initHostMemory(int numObjects)
 	mass = (double *)malloc(sizeof(double) * numObjects);
 }
 
+void initDeviceMemory() {
+	vector3 *dVel, *dPos;
+	double* dMass;
+	cudaMalloc((vector3 *)&dVel, sizeof(hVel));
+	cudaMalloc((vector3 *)&dPos, sizeof(hPos));
+	cudaMalloc((double *)&dMass, sizeof(double *));
+	cudaMemcpy(hVel, dVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(hPos, dPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(mass, dMass, sizeof(double*), cudaMemcpyHostToDevice);
+}
+
 //freeHostMemory: Free storage allocated by a previous call to initHostMemory
 //Parameters: None
 //Returns: None
@@ -32,6 +43,12 @@ void freeHostMemory()
 	free(hVel);
 	free(hPos);
 	free(mass);
+}
+
+void freeDeviceMemory() {
+	cudaFree(dVel);
+	cudaFree(dPos);
+	cudaFree(dMass);
 }
 
 //planetFill: Fill the first NUMPLANETS+1 entries of the entity arrays with an estimation
@@ -96,6 +113,7 @@ int main(int argc, char **argv)
 	//srand(time(NULL));
 	srand(1234);
 	initHostMemory(NUMENTITIES);
+	initDeviceMemory();
 	planetFill();
 	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
 	//now we have a system.
@@ -112,4 +130,5 @@ int main(int argc, char **argv)
 	printf("This took a total time of %f seconds\n",(double)t1/CLOCKS_PER_SEC);
 
 	freeHostMemory();
+	freeDeviceMemory();
 }
