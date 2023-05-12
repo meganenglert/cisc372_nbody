@@ -2,8 +2,6 @@
 #include <math.h>
 #include "vector.h"
 #include "config.h"
-#include <cuda_runtime.h>
-#include "cuda.h"
 
 
 __global__ void setThingsUp(vector3 *values,vector3 **accels) {
@@ -16,7 +14,7 @@ __global__ void setThingsUp(vector3 *values,vector3 **accels) {
 	}
 }
 
-__global__ void fill(int NUMENTITIES, vector3 *values, vector3 **accels)
+__global__ void fill(vector3 *values, vector3 **accels)
 {
 	for (int i = index; i < NUMENTITIES; i += stride)
 	{
