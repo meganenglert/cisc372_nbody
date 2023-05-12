@@ -2,6 +2,8 @@
 #include <math.h>
 #include "vector.h"
 #include "config.h"
+#include <cuda_runtime.h>
+#include "cuda.h"
 
 
 __global__ void setThingsUp(vector3 *values,vector3 **accels) {
