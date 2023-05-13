@@ -23,15 +23,14 @@ void initHostMemory(int numObjects)
 	mass = (double *)malloc(sizeof(double) * numObjects);
 }
 
-void initDeviceMemory(int numObjects)
+void initDeviceMemory()
 {
-
-	cudaMalloc((void **)&d_hVel, (size_t)sizeof(vector3) * numObjects);
-	cudaMalloc((void **)&d_hPos, (size_t)sizeof(vector3) * numObjects);
-	cudaMalloc((void **)&d_mass, sizeof(double)*numObjects);
-	cudaMemcpy( d_hVel,hVel, sizeof(vector3) * numObjects, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_hPos,hPos, sizeof(vector3) * numObjects, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_mass, mass,sizeof(double)*numObjects, cudaMemcpyHostToDevice);
+	cudaMalloc((void **)&d_hVel, sizeof(vector3) * NUMENTITIES);
+	cudaMalloc((void **)&d_hPos, (size_t)sizeof(vector3) * NUMENTITIES);
+	cudaMalloc((void **)&d_mass, sizeof(double)*NUMENTITIES);
+	cudaMemcpy( d_hVel,hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_hPos,hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_mass, mass,sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 }
 
 // freeHostMemory: Free storage allocated by a previous call to initHostMemory
@@ -159,8 +158,7 @@ int main(int argc, char **argv)
 	planetFill();
 	printf("planet filled\n");
 	randomFill(NUMPLANETS + 1, NUMENTITIES-NUMPLANETS-1);
-	//initDeviceMemory(NUMENTITIES);
-	//hostToDev();
+	initDeviceMemory();
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
