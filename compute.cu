@@ -31,10 +31,10 @@ __global__ void fill(vector3 *values, vector3 **accels)
 			{
 				vector3 distance;
 				for (int k = 0; k < 3; k++)
-					distance[k] = dPos[i][k] - dPos[j][k];
+					distance[k] = d_hPos[i][k] - d_hPos[j][k];
 				double magnitude_sq = distance[0] * distance[0] + distance[1] * distance[1] + distance[2] * distance[2];
 				double magnitude = sqrt(magnitude_sq);
-				double accelmag = -1 * GRAV_CONSTANT * mass[j] / magnitude_sq;
+				double accelmag = -1 * GRAV_CONSTANT * d_mass[j] / magnitude_sq;
 				FILL_VECTOR(accels[i][j], accelmag * distance[0] / magnitude, accelmag * distance[1] / magnitude, accelmag * distance[2] / magnitude);
 			}
 		}
@@ -44,6 +44,7 @@ void compute()
 {
 	// make an acceleration matrix which is NUMENTITIES squared in size;
 	int i, j, k;
+	int blockSize = 256;
 	vector3 *values = (vector3 *)malloc(sizeof(vector3) * NUMENTITIES * NUMENTITIES);
 	vector3 **accels = (vector3 **)malloc(sizeof(vector3 *) * NUMENTITIES);
 	vector3 *d_values;
@@ -52,7 +53,7 @@ void compute()
 	cudaMalloc((vector3 ***)&d_accels, sizeof(accels));
 
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
-	construct_row<<<1, 256>>>(NUMENTITIES, d_values, d_accels);
+	construct_row<<<numBlocks, blockSize>>>(NUMENTITIES, d_values, d_accels);
 	cudaDeviceSynchronize();
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
