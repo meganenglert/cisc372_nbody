@@ -69,7 +69,7 @@ void compute(){
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
-	for (int i=idx;i<NUMENTITIES;i++)
+	for (int i=0;i<NUMENTITIES;i++)
 		accels[i]=&values[i*NUMENTITIES];
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
