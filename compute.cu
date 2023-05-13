@@ -57,6 +57,8 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	cudaDeviceSynchronize();
 	valfill<<<numBlocks, blockSize>>>(d_values, d_accels, d_hPos, d_mass);
 	cudaDeviceSynchronize();
+	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_mass, mass, sizeof(double)*NUMENTITIES, cudaMemcpyDeviceToHost);
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
