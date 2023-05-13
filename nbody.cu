@@ -114,17 +114,20 @@ void printSystem(FILE *handle)
 	for (i = 0; i < NUMENTITIES; i++)
 	{
 		fprintf(handle, "pos=(\n");
+		fflush(stdout);
 		for (j = 0; j < 3; j++)
 		{
 			fprintf(handle, "%lf,\n", hPos[i][j]);
 		}
 		printf("),v=(\n");
+		fflush(stdout);
 		for (j = 0; j < 3; j++)
 		{
 			fprintf(handle, "%lf,\n", hVel[i][j]);
 		}
 		fprintf(handle, "),m=%lf\n", mass[i]);
 		printf("OBJECT NUMBER %d\n", i);
+		fflush(stdout);
 	}
 }
 
@@ -146,12 +149,11 @@ int main(int argc, char **argv)
 	int t_now;
 	// srand(time(NULL));
 	srand(1234);
-	printf("???\n");
 	fflush(stdout);
 	initHostMemory(NUMENTITIES);
-	printf("test\n");
 	planetFill();
 	printf("planet filled\n");
+	fflush(stdout);
 	randomFill(NUMPLANETS + 1, NUMENTITIES-NUMPLANETS-1);
 	
 	//DEVICE ----------------------------------------------------
