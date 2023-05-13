@@ -111,6 +111,7 @@ void printSystem(FILE *handle)
 			fprintf(handle, "%lf,", hVel[i][j]);
 		}
 		fprintf(handle, "),m=%lf\n", mass[i]);
+		printf("OBJECT NUMBER %d\n", i);
 	}
 }
 
