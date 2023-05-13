@@ -51,7 +51,7 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	cudaMalloc((vector3 **)&d_values, sizeof(values));
 	vector3 **d_accels;
 	cudaMalloc((vector3 ***)&d_accels, sizeof(accels));
-
+	vector3 accel_sum;
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
 	setUpMatrix<<<numBlocks, blockSize>>>(d_values, d_accels);
 	cudaDeviceSynchronize();
