@@ -4,7 +4,9 @@
 #include "config.h"
 
 __global__ void constructAccels(vector3 **accels, vector3* values) {
-	for (int i=0;i<NUMENTITIES;i++)
+	int idx = threadIdx.x;
+	int stride = blockDim.x;
+	for (int i=idx;i<NUMENTITIES;i+=stride)
 		accels[i]=&values[i*NUMENTITIES];
 }
 
@@ -67,7 +69,7 @@ void compute(){
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
-	constructMatrix<<<blockSize, numBlocks>>>(d_accels, d_values);
+	constructAccels<<<blockSize, numBlocks>>>(d_accels, d_values);
 	cudaDeviceSynchronize();
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
