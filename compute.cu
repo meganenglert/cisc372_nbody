@@ -3,6 +3,11 @@
 #include "vector.h"
 #include "config.h"
 
+__global__ void constructAccels(vector3 **accels, vector3* values) {
+	for (i=0;i<NUMENTITIES;i++)
+		accels[i]=&values[i*NUMENTITIES];
+}
+
 __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hPos, vector3 *hVel, double *mass) {
 	int idx = threadIdx.x;
 	int stride = blockDim.x;
@@ -50,20 +55,21 @@ __global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
-	int blockSize = 128;
+	int blockSize = 64;
 	int numBlocks = (NUMENTITIES - 1) / blockSize + 1; 
 	
 	//make an acceleration matrix which is NUMENTITIES squared in size;
-	int i,j,k;
 	vector3* values=(vector3*)malloc(sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	vector3** accels=(vector3**)malloc(sizeof(vector3*)*NUMENTITIES);
-
 	// DEVICE VARIABLE DECLARATIONS
 	vector3* d_values;
 	vector3** d_accels;
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
+	constructMatrix<<<blockSize, numBlocks>>>(d_accels, d_values);
+	cudaDeviceSynchronize();
+	cudaMemcpy(d_accels)
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3) * NUMENTITIES);
@@ -72,11 +78,8 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 
-
-	for (i=0;i<NUMENTITIES;i++)
-		accels[i]=&values[i*NUMENTITIES];
-	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyDeviceToHost);
 	
 	computePairAccels<<<numBlocks, blockSize>>>(d_accels, d_values, d_hPos, d_hVel, d_mass);
 	cudaDeviceSynchronize();
