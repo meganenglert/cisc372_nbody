@@ -147,6 +147,7 @@ int main(int argc, char **argv)
 	// srand(time(NULL));
 	srand(1234);
 	printf("???\n");
+	fflush(stdio);
 	initHostMemory(NUMENTITIES);
 	printf("test\n");
 	planetFill();
