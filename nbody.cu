@@ -91,9 +91,10 @@ void planetFill()
 //Side Effects: Fills count entries in our system starting at index start (0 based)
 void randomFill(int start, int count)
 {
-	int i, j;// c = start;
+	int i, j;
 	for (i = start; i < start + count; i++)
 	{
+		printf("filling %d\n", i);
 		for (j = 0; j < 3; j++)
 		{
 			hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
@@ -161,7 +162,7 @@ int main(int argc, char **argv)
 	printf("here\n");
 // now we have a system.
 #ifdef DEBUG
-	printSystem(stdout);
+	//printSystem(stdout);
 #endif
 printf("here\n");
 	for (t_now = 0; t_now < DURATION; t_now += INTERVAL)
