@@ -87,9 +87,9 @@ __global__ void randomFill(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 		if (i < NUMENTITIES) {
 		for (j = 0; j < 3; j++)
 		{
-			d_hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
-			d_hPos[i][j] = (double)rand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
-			d_mass[i] = (double)rand() / RAND_MAX * MAX_MASS;
+			d_hVel[i][j] = (double)curand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
+			d_hPos[i][j] = (double)curand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
+			d_mass[i] = (double)curand() / RAND_MAX * MAX_MASS;
 		}}
 	}
 }
