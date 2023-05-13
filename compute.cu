@@ -65,22 +65,24 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		(void*)accel_sum = {0, 0, 0};
+		(void*)d_accel_sum = {0, 0, 0};
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
-				accel_sum[k] += accels[i][j][k];
+				d_accel_sum[k] += accels[i][j][k];
 		}
 		// compute the new velocity based on the acceleration and time interval
 		// compute the new position based on the velocity and time interval
 		for (k = 0; k < 3; k++)
 		{
-			d_hVel[i][k] += accel_sum[k] * INTERVAL;
-			d_hPos[i][k] = hVel[i][k] * INTERVAL;
+			d_hVel[i][k] += d_accel_sum[k] * INTERVAL;
+			d_hPos[i][k] = d_hVel[i][k] * INTERVAL;
 		}
 	}
 	free(accels);
 	free(values);
+	free(h_accel_sum);
+	cudaFree(d_accel_sum);
 	cudaFree(d_accels);
 	cudaFree(d_values);
 }
