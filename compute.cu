@@ -51,7 +51,7 @@ __global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
-	int blockSize = 256;
+	int blockSize = 64;
 	int numBlocks = (NUMENTITIES - 1) / blockSize + 1; 
 	
 	//make an acceleration matrix which is NUMENTITIES squared in size;
