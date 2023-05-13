@@ -58,31 +58,27 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	fill<<<numBlocks, blockSize>>>(d_values, d_accels, d_hPos, d_mass);
 	cudaDeviceSynchronize();
 
-	vector3 h_accel_sum = {0, 0, 0};
-	vector3 d_accel_sum;
-	cudaMalloc((vector3 **)&d_accel_sum, sizeof(vector3));
+	vector3 accel_sum = {0, 0, 0};
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		vector3 h_accel_sum = {0, 0, 0};
+		vector3 accel_sum = {0, 0, 0};
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
-				h_accel_sum[k] += d_accels[i][j][k];
+				accel_sum[k] += d_accels[i][j][k];
 		}
 		// compute the new velocity based on the acceleration and time interval
 		// compute the new position based on the velocity and time interval
 		for (k = 0; k < 3; k++)
 		{
-			hVel[i][k] += d_accel_sum[k] * INTERVAL;
+			hVel[i][k] += accel_sum[k] * INTERVAL;
 			hPos[i][k] = d_hVel[i][k] * INTERVAL;
 		}
 	}
 	free(accels);
 	free(values);
-	free(h_accel_sum);
-	cudaFree(d_accel_sum);
 	cudaFree(d_accels);
 	cudaFree(d_values);
 }
