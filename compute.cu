@@ -50,7 +50,7 @@ __global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
-	int blockSize = 256;
+	int blockSize = 128;
 	int numBlocks = (NUMENTITIES - 1) / blockSize + 1; 
 	
 	//make an acceleration matrix which is NUMENTITIES squared in size;
@@ -84,8 +84,6 @@ void compute(){
 	cudaDeviceSynchronize();
 	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyDeviceToHost);
 	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyDeviceToHost);
-	
-
 	cudaFree(d_values);
 	cudaFree(d_accels);
 	cudaFree(d_hPos);
