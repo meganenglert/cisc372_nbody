@@ -77,17 +77,20 @@ void planetFill()
 //				count: The number of random objects to put into our system
 // Returns: None
 // Side Effects: Fills count entries in our system starting at index start (0 based)
-void randomFill(int start, int count)
+__global__ void randomFill()
 {
-	int i, j, c = start;
-	for (i = start; i < start + count; i++)
+	int i, j;
+	int start = threadIdx.x * blockIdx.x + 7;
+	int count = blockDim.x;
+	for (i = start; i < start + count + 7; i++)
 	{
+		if (i < NUMENTITIES) {
 		for (j = 0; j < 3; j++)
 		{
 			hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
 			hPos[i][j] = (double)rand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
 			mass[i] = (double)rand() / RAND_MAX * MAX_MASS;
-		}
+		}}
 	}
 }
 
@@ -125,7 +128,7 @@ int main(int argc, char **argv)
 	initDeviceMemory(NUMENTITIES);
 	planetFill();
 	printf("planet filled\n");
-	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
+	randomFill<<<4,256>>>(NUMPLANETS + 1, NUMASTEROIDS);
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
