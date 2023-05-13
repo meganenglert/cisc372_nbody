@@ -154,7 +154,7 @@ int main(int argc, char **argv)
 	planetFill();
 	printf("planet filled\n");
 	fflush(stdout);
-	randomFill(NUMPLANETS + 1, NUMENTITIES-NUMPLANETS-1);
+	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
 	
 	//DEVICE ----------------------------------------------------
 	cudaMalloc((void **)&d_hVel, sizeof(vector3) * NUMENTITIES);
