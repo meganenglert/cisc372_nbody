@@ -131,6 +131,8 @@ int main(int argc, char **argv)
 	for (t_now = 0; t_now < DURATION; t_now += INTERVAL)
 	{
 		compute(d_hVel, d_hPos, d_mass);
+		cudaMemcpy( d_hVel,&hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy( d_hPos,&hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost);
 	}
 	clock_t t1 = clock() - t0;
 #ifdef DEBUG
