@@ -87,9 +87,9 @@ __global__ void randomFill()
 		if (i < NUMENTITIES) {
 		for (j = 0; j < 3; j++)
 		{
-			hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
-			hPos[i][j] = (double)rand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
-			mass[i] = (double)rand() / RAND_MAX * MAX_MASS;
+			d_hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
+			d_hPos[i][j] = (double)rand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
+			d_mass[i] = (double)rand() / RAND_MAX * MAX_MASS;
 		}}
 	}
 }
@@ -129,6 +129,9 @@ int main(int argc, char **argv)
 	planetFill();
 	printf("planet filled\n");
 	randomFill<<<4,256>>>(NUMPLANETS + 1, NUMASTEROIDS);
+	cudaMemcpy(d_hPos, hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_hVel, hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_mass, mass, sizeof(double) * NUMENTITIES, cudaMemcpyDeviceToHost());
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
