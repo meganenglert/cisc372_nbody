@@ -77,7 +77,7 @@ void planetFill()
 //				count: The number of random objects to put into our system
 // Returns: None
 // Side Effects: Fills count entries in our system starting at index start (0 based)
-__global__ void randomFill()
+__global__ void randomFill(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 {
 	int i, j;
 	int start = threadIdx.x * blockIdx.x + 7;
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 	planetFill();
 	printf("planet filled\n");
 	hostToDev();
-	randomFill<<<4,256>>>(NUMPLANETS + 1, NUMASTEROIDS);
+	randomFill<<<4,256>>>(d_hVel, d_hPos, d_mass);
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
