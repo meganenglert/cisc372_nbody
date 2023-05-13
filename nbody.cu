@@ -129,9 +129,9 @@ int main(int argc, char **argv)
 	planetFill();
 	printf("planet filled\n");
 	randomFill<<<4,256>>>(NUMPLANETS + 1, NUMASTEROIDS);
-	cudaMemcpy(d_hPos, hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
-	cudaMemcpy(d_hVel, hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
-	cudaMemcpy(d_mass, mass, sizeof(double) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_hPos, &hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_hVel, &hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_mass, &mass, sizeof(double) * NUMENTITIES, cudaMemcpyDeviceToHost());
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
