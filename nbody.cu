@@ -159,8 +159,8 @@ int main(int argc, char **argv)
 	initDeviceMemory(NUMENTITIES);
 	planetFill();
 	printf("planet filled\n");
+	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
 	hostToDev();
-	randomFill<<<4,256>>>(d_hVel, d_hPos, d_mass);
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
