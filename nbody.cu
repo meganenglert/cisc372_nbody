@@ -165,6 +165,7 @@ int main(int argc, char **argv)
 #ifdef DEBUG
 	printSystem(stdout);
 #endif
+printf("here\n");
 	for (t_now = 0; t_now < DURATION; t_now += INTERVAL)
 	{
 		compute(d_hVel, d_hPos, d_mass);
