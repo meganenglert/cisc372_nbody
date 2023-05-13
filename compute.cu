@@ -48,15 +48,19 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	vector3 *values = (vector3 *)malloc(sizeof(vector3) * NUMENTITIES * NUMENTITIES);
 	vector3 **accels = (vector3 **)malloc(sizeof(vector3 *) * NUMENTITIES);
 	vector3 *d_values;
-	cudaMalloc((vector3 **)&d_values, sizeof(values));
+	cudaMalloc((vector3 **)&d_values, sizeof(vector3) * NUMENTITIES * NUMENTITIES);
 	vector3 **d_accels;
-	cudaMalloc((vector3 ***)&d_accels, sizeof(accels));
+	cudaMalloc((vector3 ***)&d_accels, sizeof(vector3 *) * NUMENTITIES);
 	vector3 accel_sum;
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
 	setUpMatrix<<<numBlocks, blockSize>>>(d_values, d_accels);
 	cudaDeviceSynchronize();
 	fill<<<numBlocks, blockSize>>>(d_values, d_accels, d_hPos, d_mass);
 	cudaDeviceSynchronize();
+
+	vector3 h_accel_sum = {0, 0, 0};
+	vector3 *d_accel_sum;
+	cudaMalloc((vector3 **)&d_accel_sum, sizeof(vector3));
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
