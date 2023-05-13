@@ -55,7 +55,7 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
 	setUpMatrix<<<numBlocks, blockSize>>>(d_values, d_accels);
 	cudaDeviceSynchronize();
-	fill<<<numBlocks, blockSize>>>(d_values, d_accels);
+	fill<<<numBlocks, blockSize>>>(d_values, d_accels, d_hPos, d_mass);
 	cudaDeviceSynchronize();
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
