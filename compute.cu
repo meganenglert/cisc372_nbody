@@ -14,7 +14,7 @@ __global__ void setUpMatrix(vector3 *values,vector3 **accels) {
 	}
 }
 
-__global__ void fill(vector3 *values, vector3 **accels)
+__global__ void fill(vector3 *values, vector3 **accels, vector3 *d_hPos, double* d_mass)
 {
 	int idx = threadIdx.x;
 	int stride = blockDim.x;
