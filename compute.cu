@@ -3,7 +3,9 @@
 #include "vector.h"
 #include "config.h"
 
-/*__global__ void constructAccels(vector3 **accels, vector3* values) {
+/* Commented out bc this somehow made it slower???
+
+__global__ void constructAccels(vector3 **accels, vector3* values) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int stride = blockDim.x * gridDim.x;
 	for (int i=idx;i<NUMENTITIES;i+=stride)
