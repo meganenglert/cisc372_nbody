@@ -156,10 +156,10 @@ int main(int argc, char **argv)
 	// srand(time(NULL));
 	srand(1234);
 	initHostMemory(NUMENTITIES);
-	initDeviceMemory(NUMENTITIES);
 	planetFill();
 	printf("planet filled\n");
 	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
+	initDeviceMemory(NUMENTITIES);
 	hostToDev();
 // now we have a system.
 #ifdef DEBUG
