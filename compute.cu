@@ -3,10 +3,16 @@
 #include "vector.h"
 #include "config.h"
 
+__global__ void constructAccels(vector3 **accels, vector3* values) {
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	int stride = blockDim.x * gridDim.x;
+	for (int i=idx;i<NUMENTITIES;i+=stride)
+		accels[i]=&values[i*NUMENTITIES];
+}
 
 __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hPos, vector3 *hVel, double *mass) {
-	int idx = threadIdx.x;
-	int stride = blockDim.x;
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	int stride = blockDim.x * gridDim.x;
 	int i, j, k;
 	//first compute the pairwise accelerations.  Effect is on the first argument.
 	for (i=idx;i<NUMENTITIES;i+=stride){
@@ -27,8 +33,8 @@ __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hP
 }
 
 __global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
-	int idx = threadIdx.x;
-	int stride = blockDim.x;
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;
+	int stride = blockDim.x * gridDim.x;
 	int i, j, k;
 
 	//sum up the rows of our matrix to get effect on each entity, then update velocity and position.
@@ -51,7 +57,7 @@ __global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
 //Returns: None
 //Side Effect: Modifies the hPos and hVel arrays with the new positions and accelerations after 1 INTERVAL
 void compute(){
-	int blockSize = 64;
+	int blockSize = 256;
 	int numBlocks = (NUMENTITIES - 1) / blockSize + 1; 
 	
 	//make an acceleration matrix which is NUMENTITIES squared in size;
@@ -63,8 +69,7 @@ void compute(){
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
-	for (int i=0;i<NUMENTITIES;i++)
-		accels[i]=&values[i*NUMENTITIES];
+	constructAccels<<<numBlocks, blockSize>>>(d_accels, d_values);
 	cudaDeviceSynchronize();
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
