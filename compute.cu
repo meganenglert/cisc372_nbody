@@ -65,7 +65,7 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		h_accel_sum = {0, 0, 0};
+		vector3 h_accel_sum = {0, 0, 0};
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
