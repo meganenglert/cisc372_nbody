@@ -3,12 +3,6 @@
 #include "vector.h"
 #include "config.h"
 
-__global__ void constructAccels(vector3 **accels, vector3* values) {
-	int idx = threadIdx.x;
-	int stride = blockDim.x;
-	for (int i=idx;i<NUMENTITIES;i+=stride)
-		accels[i]=&values[i*NUMENTITIES];
-}
 
 __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hPos, vector3 *hVel, double *mass) {
 	int idx = threadIdx.x;
@@ -69,7 +63,8 @@ void compute(){
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
-	constructAccels<<<numBlocks, blockSize>>>(d_accels, d_values);
+	for (int i=0;i<NUMENTITIES;i++)
+		accels[i]=&values[i*NUMENTITIES];
 	cudaDeviceSynchronize();
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
