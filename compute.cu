@@ -77,7 +77,9 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 			d_hPos[i][k] = d_hVel[i][k] * INTERVAL;
 		}
 	}
-	
+	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_hVel, hVel, sizeof(vector3)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_mass, mass, sizeof(double)*NUMENTITIES, cudaMemcpyDeviceToHost);
 	free(accels);
 	free(values);
 	cudaFree(d_accels);
