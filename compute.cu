@@ -3,10 +3,10 @@
 #include "vector.h"
 #include "config.h"
 
-__global__ computePairAccels(vector3 **accels, vector3 *values) {
+__global__ void computePairAccels(vector3 **accels, vector3 *values) {
 	int idx = threadIdx.x;
 	int stride = blockDim.x;
-	
+	int i, j, k;
 	//first compute the pairwise accelerations.  Effect is on the first argument.
 	for (i=idx;i<NUMENTITIES;i+=stride){
 		for (j=0;j<NUMENTITIES;j++){
