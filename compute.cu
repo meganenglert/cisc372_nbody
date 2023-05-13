@@ -4,7 +4,7 @@
 #include "config.h"
 
 __global__ void constructAccels(vector3 **accels, vector3* values) {
-	for (i=0;i<NUMENTITIES;i++)
+	for (int i=0;i<NUMENTITIES;i++)
 		accels[i]=&values[i*NUMENTITIES];
 }
 
@@ -69,7 +69,7 @@ void compute(){
 	
 	constructMatrix<<<blockSize, numBlocks>>>(d_accels, d_values);
 	cudaDeviceSynchronize();
-	cudaMemcpy(d_accels)
+	cudaMemcpy(d_accels);
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3) * NUMENTITIES);
