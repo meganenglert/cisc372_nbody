@@ -118,6 +118,7 @@ void printSystem(FILE *handle)
 		for (j = 0; j < 3; j++)
 		{
 			fprintf(handle, "%lf,\n", hPos[i][j]);
+			fflush(stdout);
 		}
 		printf("),v=(\n");
 		fflush(stdout);
@@ -126,6 +127,7 @@ void printSystem(FILE *handle)
 			fprintf(handle, "%lf,\n", hVel[i][j]);
 		}
 		fprintf(handle, "),m=%lf\n", mass[i]);
+		fflush(stdout);
 		printf("OBJECT NUMBER %d\n", i);
 		fflush(stdout);
 	}
