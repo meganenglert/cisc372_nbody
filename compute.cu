@@ -40,7 +40,7 @@ __global__ void fill(vector3 *values, vector3 **accels)
 		}
 	}
 }
-void compute()
+void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 {
 	// make an acceleration matrix which is NUMENTITIES squared in size;
 	int i, j, k;
