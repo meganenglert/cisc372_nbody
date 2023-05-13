@@ -77,7 +77,7 @@ void planetFill()
 //				count: The number of random objects to put into our system
 // Returns: None
 // Side Effects: Fills count entries in our system starting at index start (0 based)
-__global__ void randomFill(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
+/*__global__ void randomFill(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 {
 	int i, j;
 	int start = threadIdx.x * blockIdx.x + 7;
@@ -91,6 +91,25 @@ __global__ void randomFill(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 			d_hPos[i][j] = (double)curand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
 			d_mass[i] = (double)curand() / RAND_MAX * MAX_MASS;
 		}}
+	}
+}*/
+
+//randomFill: FIll the rest of the objects in the system randomly starting at some entry in the list
+//Parameters: 	start: The index of the first open entry in our system (after planetFill).
+//				count: The number of random objects to put into our system
+//Returns: None
+//Side Effects: Fills count entries in our system starting at index start (0 based)
+void randomFill(int start, int count)
+{
+	int i, j;// c = start;
+	for (i = start; i < start + count; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			hVel[i][j] = (double)rand() / RAND_MAX * MAX_DISTANCE * 2 - MAX_DISTANCE;
+			hPos[i][j] = (double)rand() / RAND_MAX * MAX_VELOCITY * 2 - MAX_VELOCITY;
+			mass[i] = (double)rand() / RAND_MAX * MAX_MASS;
+		}
 	}
 }
 
