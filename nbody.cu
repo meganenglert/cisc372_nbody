@@ -25,8 +25,8 @@ void initHostMemory(int numObjects)
 
 void initDeviceMemory() {
 	
-	cudaMalloc((void *)&d_hVel, (size_t) sizeof(vector3 * numObjects));
-	cudaMalloc((void *)&d_hPos, (size_t) sizeof(vector3 * numObjects));
+	cudaMalloc((void **)&d_hVel, (size_t) sizeof(vector3 * numObjects));
+	cudaMalloc((void **)&d_hPos, (size_t) sizeof(vector3 * numObjects));
 	cudaMemcpy(hVel, d_hVel, sizeof(vector3 * numObjects), cudaMemcpyHostToDevice);
 	cudaMemcpy(hPos, d_hPos, sizeof(vector3 * numObjects), cudaMemcpyHostToDevice);
 }
