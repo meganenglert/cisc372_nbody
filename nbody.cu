@@ -158,6 +158,7 @@ int main(int argc, char **argv)
 	cudaMemcpy(d_hPos,hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass,sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 	// --------------------------------------------------------------------
+	printf("here\n");
 // now we have a system.
 #ifdef DEBUG
 	printSystem(stdout);
