@@ -147,7 +147,7 @@ int main(int argc, char **argv)
 	// srand(time(NULL));
 	srand(1234);
 	printf("???\n");
-	fflush(stdio);
+	fflush(stdout);
 	initHostMemory(NUMENTITIES);
 	printf("test\n");
 	planetFill();
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 	printf("here\n");
 // now we have a system.
 #ifdef DEBUG
-	//printSystem(stdout);
+	printSystem(stdout);
 #endif
 printf("here\n");
 	for (t_now = 0; t_now < DURATION; t_now += INTERVAL)
