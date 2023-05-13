@@ -47,9 +47,9 @@ void freeHostMemory()
 
 void freeDeviceMemory()
 {
-	cudaFree(dVel);
-	cudaFree(dPos);
-	cudaFree(dMass);
+	cudaFree(d_hVel);
+	cudaFree(d_hPos);
+	cudaFree(d_mass);
 }
 
 // planetFill: Fill the first NUMPLANETS+1 entries of the entity arrays with an estimation
