@@ -124,6 +124,7 @@ int main(int argc, char **argv)
 	initHostMemory(NUMENTITIES);
 	initDeviceMemory(NUMENTITIES);
 	planetFill();
+	fprintf("planet filled\n")
 	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
 // now we have a system.
 #ifdef DEBUG
