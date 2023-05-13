@@ -71,8 +71,8 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 		// compute the new position based on the velocity and time interval
 		for (k = 0; k < 3; k++)
 		{
-			dVel[i][k] += accel_sum[k] * INTERVAL;
-			dPos[i][k] = hVel[i][k] * INTERVAL;
+			d_hVel[i][k] += accel_sum[k] * INTERVAL;
+			d_hPos[i][k] = hVel[i][k] * INTERVAL;
 		}
 	}
 	free(accels);
