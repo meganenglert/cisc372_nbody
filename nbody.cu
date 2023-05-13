@@ -147,6 +147,7 @@ int main(int argc, char **argv)
 	// srand(time(NULL));
 	srand(1234);
 	initHostMemory(NUMENTITIES);
+	printf("test\n");
 	planetFill();
 	printf("planet filled\n");
 	randomFill(NUMPLANETS + 1, NUMENTITIES-NUMPLANETS-1);
