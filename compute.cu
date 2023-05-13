@@ -69,14 +69,14 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
-				d_accel_sum[k] += d_accels[i][j][k];
+				h_accel_sum[k] += d_accels[i][j][k];
 		}
 		// compute the new velocity based on the acceleration and time interval
 		// compute the new position based on the velocity and time interval
 		for (k = 0; k < 3; k++)
 		{
-			d_hVel[i][k] += d_accel_sum[k] * INTERVAL;
-			d_hPos[i][k] = d_hVel[i][k] * INTERVAL;
+			hVel[i][k] += d_accel_sum[k] * INTERVAL;
+			hPos[i][k] = d_hVel[i][k] * INTERVAL;
 		}
 	}
 	free(accels);
