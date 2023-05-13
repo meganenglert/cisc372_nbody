@@ -69,7 +69,6 @@ void compute(){
 	
 	constructMatrix<<<blockSize, numBlocks>>>(d_accels, d_values);
 	cudaDeviceSynchronize();
-	cudaMemcpy(d_accels);
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3) * NUMENTITIES);
