@@ -10,7 +10,7 @@
 // represents the objects in the system.  Global variables
 vector3 *hVel, *d_hVel;
 vector3 *hPos, *d_hPos;
-double *mass;
+double *mass, *d_mass;
 
 // initHostMemory: Create storage for numObjects entities in our system
 // Parameters: numObjects: number of objects to allocate
@@ -23,13 +23,15 @@ void initHostMemory(int numObjects)
 	mass = (double *)malloc(sizeof(double) * numObjects);
 }
 
-void initDeviceMemory()
+void initDeviceMemory(int numObjects)
 {
 
 	cudaMalloc((void **)&d_hVel, (size_t)sizeof(vector3) * numObjects);
 	cudaMalloc((void **)&d_hPos, (size_t)sizeof(vector3) * numObjects);
+	cudaMalloc((void **)&d_mass, sizeof(double)*numObjects);
 	cudaMemcpy(hVel, d_hVel, sizeof(vector3) * numObjects, cudaMemcpyHostToDevice);
 	cudaMemcpy(hPos, d_hPos, sizeof(vector3) * numObjects, cudaMemcpyHostToDevice);
+	cudaMemcpy(mass, d_mass, sizeof(double)*numObjects, cudaMemcpyHostToDevice);
 }
 
 // freeHostMemory: Free storage allocated by a previous call to initHostMemory
@@ -119,7 +121,7 @@ int main(int argc, char **argv)
 	// srand(time(NULL));
 	srand(1234);
 	initHostMemory(NUMENTITIES);
-	initDeviceMemory();
+	initDeviceMemory(NUMENTITIES);
 	planetFill();
 	randomFill(NUMPLANETS + 1, NUMASTEROIDS);
 // now we have a system.
