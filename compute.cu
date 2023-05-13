@@ -3,12 +3,12 @@
 #include "vector.h"
 #include "config.h"
 
-__global__ void constructAccels(vector3 **accels, vector3* values) {
+/*__global__ void constructAccels(vector3 **accels, vector3* values) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
 	int stride = blockDim.x * gridDim.x;
 	for (int i=idx;i<NUMENTITIES;i+=stride)
 		accels[i]=&values[i*NUMENTITIES];
-}
+}*/
 
 __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hPos, vector3 *hVel, double *mass) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -69,8 +69,8 @@ void compute(){
 	cudaMalloc((void**)&d_values, sizeof(vector3)*NUMENTITIES*NUMENTITIES);
 	cudaMalloc((void**)&d_accels, sizeof(vector3*)*NUMENTITIES);
 	
-	constructAccels<<<numBlocks, blockSize>>>(d_accels, d_values);
-	cudaDeviceSynchronize();
+	for (int i=idx;i<NUMENTITIES;i++)
+		accels[i]=&values[i*NUMENTITIES];
 	// GLOBAL DEVICE DECLARATIONS
 	cudaMalloc((void**)&d_hVel, sizeof(vector3) * NUMENTITIES);
 	cudaMalloc((void**)&d_hPos, sizeof(vector3) * NUMENTITIES);
@@ -79,8 +79,8 @@ void compute(){
 	cudaMemcpy(d_hPos, hPos, sizeof(vector3)*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_mass, mass, sizeof(double)*NUMENTITIES, cudaMemcpyHostToDevice);
 
-	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyDeviceToHost);
-	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyDeviceToHost);
+	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyHostToDevice);
 	
 	computePairAccels<<<numBlocks, blockSize>>>(d_accels, d_values, d_hPos, d_hVel, d_mass);
 	cudaDeviceSynchronize();
