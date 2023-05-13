@@ -24,6 +24,27 @@ __global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hP
 		}
 	}
 }
+
+__global__ void computeEffects(vector3 **accels, vector3 *hPos, vector3 *hVel){
+	int idx = threadIdx.x;
+	int stride = blockDim.x;
+	int i, j, k;
+
+	//sum up the rows of our matrix to get effect on each entity, then update velocity and position.
+	for (i=idx;i<NUMENTITIES;i+=stride){
+		vector3 accel_sum={0,0,0};
+		for (j=0;j<NUMENTITIES;j++){
+			for (k=0;k<3;k++)
+				accel_sum[k]+=accels[i][j][k];
+		}
+		//compute the new velocity based on the acceleration and time interval
+		//compute the new position based on the velocity and time interval
+		for (k=0;k<3;k++){
+			hVel[i][k]+=accel_sum[k]*INTERVAL;
+			hPos[i][k]=hVel[i][k]*INTERVAL;
+		}
+	}
+}
 //compute: Updates the positions and locations of the objects in the system based on gravity.
 //Parameters: None
 //Returns: None
@@ -58,23 +79,12 @@ void compute(){
 	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyHostToDevice);
 	
 	computePairAccels<<<numBlocks, blockSize>>>(d_accels, d_values, d_hPos, d_hVel, d_mass);
+	cudaDeviceSynchronize();
+	computeEffects<<<numBlocks, blockSize>>>(d_accels, d_hPos, d_hVel);
+	cudaDeviceSynchronize();
 	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyDeviceToHost);
 	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyDeviceToHost);
 	
-	//sum up the rows of our matrix to get effect on each entity, then update velocity and position.
-	for (i=0;i<NUMENTITIES;i++){
-		vector3 accel_sum={0,0,0};
-		for (j=0;j<NUMENTITIES;j++){
-			for (k=0;k<3;k++)
-				accel_sum[k]+=accels[i][j][k];
-		}
-		//compute the new velocity based on the acceleration and time interval
-		//compute the new position based on the velocity and time interval
-		for (k=0;k<3;k++){
-			hVel[i][k]+=accel_sum[k]*INTERVAL;
-			hPos[i][k]=hVel[i][k]*INTERVAL;
-		}
-	}
 
 	cudaFree(d_values);
 	cudaFree(d_accels);
