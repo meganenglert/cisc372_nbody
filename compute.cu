@@ -53,7 +53,9 @@ void compute()
 	cudaMalloc((vector3 ***)&d_accels, sizeof(accels));
 
 	int numBlocks = (NUMENTITIES + blockSize - 1) / blockSize;
-	construct_row<<<numBlocks, blockSize>>>(NUMENTITIES, d_values, d_accels);
+	setUpMatrix<<<numBlocks, blockSize>>>(d_values, d_accels);
+	cudaDeviceSynchronize();
+	fill<<<numBlocks, blockSize>>>(d_values, d_accels);
 	cudaDeviceSynchronize();
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
