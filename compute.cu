@@ -59,13 +59,13 @@ void compute(vector3 *d_hVel, vector3 *d_hPos, double *d_mass)
 	cudaDeviceSynchronize();
 
 	vector3 h_accel_sum = {0, 0, 0};
-	vector3 *d_accel_sum;
+	vector3 d_accel_sum;
 	cudaMalloc((vector3 **)&d_accel_sum, sizeof(vector3));
 
 	// sum up the rows of our matrix to get effect on each entity, then update velocity and position.
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		d_accel_sum = {0, 0, 0};
+		h_accel_sum = {0, 0, 0};
 		for (j = 0; j < NUMENTITIES; j++)
 		{
 			for (k = 0; k < 3; k++)
