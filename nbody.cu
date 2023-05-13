@@ -122,15 +122,15 @@ void printSystem(FILE *handle)
 	int i, j;
 	for (i = 0; i < NUMENTITIES; i++)
 	{
-		fprintf(handle, "pos=(");
+		fprintf(handle, "pos=(\n");
 		for (j = 0; j < 3; j++)
 		{
-			fprintf(handle, "%lf,", hPos[i][j]);
+			fprintf(handle, "%lf,\n", hPos[i][j]);
 		}
-		printf("),v=(");
+		printf("),v=(\n");
 		for (j = 0; j < 3; j++)
 		{
-			fprintf(handle, "%lf,", hVel[i][j]);
+			fprintf(handle, "%lf,\n", hVel[i][j]);
 		}
 		fprintf(handle, "),m=%lf\n", mass[i]);
 		printf("OBJECT NUMBER %d\n", i);
