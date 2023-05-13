@@ -3,7 +3,7 @@
 #include "vector.h"
 #include "config.h"
 
-__global__ void computePairAccels(vector3 **accels, vector3 *values) {
+__global__ void computePairAccels(vector3 **accels, vector3 *values, vector3 *hPos, vector3 *hVel, double *mass) {
 	int idx = threadIdx.x;
 	int stride = blockDim.x;
 	int i, j, k;
@@ -15,10 +15,10 @@ __global__ void computePairAccels(vector3 **accels, vector3 *values) {
 			}
 			else{
 				vector3 distance;
-				for (k=0;k<3;k++) distance[k]=d_hPos[i][k]-d_hPos[j][k];
+				for (k=0;k<3;k++) distance[k]=hPos[i][k]-hPos[j][k];
 				double magnitude_sq=distance[0]*distance[0]+distance[1]*distance[1]+distance[2]*distance[2];
 				double magnitude=sqrt(magnitude_sq);
-				double accelmag=-1*GRAV_CONSTANT*d_mass[j]/magnitude_sq;
+				double accelmag=-1*GRAV_CONSTANT*mass[j]/magnitude_sq;
 				FILL_VECTOR(accels[i][j],accelmag*distance[0]/magnitude,accelmag*distance[1]/magnitude,accelmag*distance[2]/magnitude);
 			}
 		}
@@ -57,7 +57,7 @@ void compute(){
 	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyHostToDevice);
 	
-	computePairAccels<<<numBlocks, blockSize>>>(d_accels, d_values);
+	computePairAccels<<<numBlocks, blockSize>>>(d_accels, d_values, d_hPos, d_hVel, d_mass);
 	cudaMemcpy(d_values, values, sizeof(vector3)*NUMENTITIES*NUMENTITIES, cudaMemcpyDeviceToHost);
 	cudaMemcpy(d_accels, accels, sizeof(vector3*)*NUMENTITIES, cudaMemcpyDeviceToHost);
 	
