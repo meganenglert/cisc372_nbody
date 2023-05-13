@@ -118,6 +118,18 @@ void printSystem(FILE *handle)
 	}
 }
 
+void devToHost() {
+	cudaMemcpy(d_hPos, &hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_hVel, &hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	cudaMemcpy(d_mass, &mass, sizeof(double) * NUMENTITIES, cudaMemcpyDeviceToHost());
+}
+
+void hostToDev() {
+	cudaMemcpy(d_hPos, &hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyHostToDevice());
+	cudaMemcpy(d_hVel, &hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyHostToDevice());
+	cudaMemcpy(d_mass, &mass, sizeof(double) * NUMENTITIES, cudaMemcpyHostToDevice());
+}
+
 int main(int argc, char **argv)
 {
 	clock_t t0 = clock();
@@ -128,6 +140,7 @@ int main(int argc, char **argv)
 	initDeviceMemory(NUMENTITIES);
 	planetFill();
 	printf("planet filled\n");
+	hostToDev();
 	randomFill<<<4,256>>>(NUMPLANETS + 1, NUMASTEROIDS);
 // now we have a system.
 #ifdef DEBUG
@@ -138,9 +151,7 @@ int main(int argc, char **argv)
 		compute(d_hVel, d_hPos, d_mass);
 	}
 	
-	cudaMemcpy(d_hPos, &hPos, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
-	cudaMemcpy(d_hVel, &hVel, sizeof(vector3) * NUMENTITIES, cudaMemcpyDeviceToHost());
-	cudaMemcpy(d_mass, &mass, sizeof(double) * NUMENTITIES, cudaMemcpyDeviceToHost());
+	devToHost();
 	clock_t t1 = clock() - t0;
 #ifdef DEBUG
 	printSystem(stdout);
